@@ -34,7 +34,7 @@ blockchain = BlockchainService()
 # ============================
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "supersecretkey"
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "dev_secret")
 
 # ============================
 # LOAD ENV
@@ -284,13 +284,13 @@ def save_candidates():
 # ============================
 # GENERATE QR
 # ============================
-
 @app.route("/generate/qr")
 def generate_qr():
 
     token = str(uuid.uuid4())
 
-    voting_link = f"http://127.0.0.1:5000/citizen/{token}"
+    BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:5000")
+    voting_link = f"{BASE_URL}/citizen/{token}"
 
     qr = qrcode.make(voting_link)
 
@@ -308,6 +308,7 @@ def generate_qr():
         voting_link=voting_link,
         qr_filename=qr_filename
     )
+
 # ============================
 # CITIZEN ENTRY (QR open hone par)
 # ============================
@@ -353,6 +354,7 @@ def send_otp():
     )
 
     session["otp"] = otp
+    session["otp_email"] = email
 
     print("OTP Generated:", otp)
 
@@ -521,7 +523,6 @@ def show_voting_page():
 # ============================
 # SAVE VOTE + BLOCKCHAIN
 # ============================
-
 @app.route("/vote", methods=["POST"])
 def save_vote():
 
@@ -534,55 +535,38 @@ def save_vote():
     cursor = conn.cursor()
 
     existing_vote = cursor.execute("""
-
         SELECT * FROM votes
         WHERE voter_id = ?
-
     """, (voter_id,)).fetchone()
 
     if existing_vote:
-
         conn.close()
-
         return jsonify({
-            "message":
-            "❌ You have already voted!"
+            "message": "❌ You have already voted!"
         })
 
     cursor.execute("""
-
         INSERT INTO votes (
             voter_id,
             candidate_id
         )
-
         VALUES (?, ?)
-
-    """, (
-
-        voter_id,
-        candidate_id
-
-    ))
+    """, (voter_id, candidate_id))
 
     conn.commit()
 
-    block = blockchain.store_vote(
-        voter_id,
-        candidate_id
-    )
+    try:
+        block = blockchain.store_vote(voter_id, candidate_id)
+    except Exception as e:
+        print("Blockchain error:", e)
+        block = None
 
     conn.close()
 
     return jsonify({
-
-        "message":
-        "✅ Vote Cast Successfully!",
-
+        "message": "✅ Vote Cast Successfully!",
         "blockchain_block": block
-
     })
-
 # ============================
 # VIEW BLOCKCHAIN
 # ============================
@@ -650,8 +634,6 @@ def thankyou():
 
 # RUN
 # ============================
-import os
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
