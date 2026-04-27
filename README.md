@@ -7,7 +7,7 @@ This project ensures **one person – one vote**, with OTP verification, QR-base
 
 👉 Access the live voting system here:
 
-🔗 https://decentralized-voting-system-oyu4.onrender.com
+🔗 https://decentralized-voting-system-zzla.onrender.com
 
 
 # 📌 Project Overview
