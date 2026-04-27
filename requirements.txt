@@ -6,6 +6,4 @@ pillow
 email-validator
 eventlet
 reportlab
-Flask-Mail
 python-dotenv
-reportlab
