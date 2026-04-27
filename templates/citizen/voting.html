@@ -12,112 +12,64 @@ href="{{ url_for('static', filename='css/glass.css') }}">
 <style>
 
 body {
-
 font-family: Arial, sans-serif;
 color: white;
-
+margin: 0;
+padding: 0;
 }
-
-/* Title */
 
 h1 {
-
 text-align: center;
 margin-top: 20px;
-
 }
-
-/* Container */
 
 .voting-container {
-
 display: flex;
-
 flex-wrap: wrap;
-
 justify-content: center;
-
 gap: 25px;
-
 padding: 40px;
-
 }
 
-/* Card */
-
 .candidate-card {
-
 width: 260px;
-
 background: rgba(255,255,255,0.15);
-
 backdrop-filter: blur(10px);
-
 border-radius: 20px;
-
 padding: 20px;
-
 text-align: center;
-
 box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-
 transition: 0.3s;
-
 }
 
 .candidate-card:hover {
-
 transform: scale(1.05);
-
 cursor: pointer;
-
 }
-
-/* Photo */
 
 .candidate-photo {
-
 width: 120px;
 height: 120px;
-
 border-radius: 50%;
-
 object-fit: cover;
-
 margin-bottom: 10px;
-
 }
-
-/* Emoji */
-
-.emoji {
-
-font-size: 45px;
-
-margin-top: 10px;
-
-}
-
-/* Name */
 
 .name {
-
 font-size: 18px;
-
 font-weight: bold;
-
+margin-top: 10px;
 }
 
-/* Slogan */
-
 .slogan {
-
 font-size: 14px;
-
 opacity: 0.8;
-
 margin-top: 5px;
+}
 
+.emoji {
+font-size: 40px;
+margin-top: 10px;
 }
 
 </style>
@@ -133,34 +85,27 @@ margin-top: 5px;
 {% for candidate in candidates %}
 
 <div class="candidate-card"
+onclick="castVote('{{ candidate[0] }}')">
 
-onclick="castVote({{ candidate.candidate_id }})">
-
+<!-- PHOTO -->
 <img class="candidate-photo"
-
 src="{{ url_for('static',
-filename='uploads/candidate_photos/' +
-candidate.photo) }}"
+filename='uploads/candidate_photos/' + candidate[11]) }}"
+onerror="this.src='/static/default.png'">
 
-alt="Candidate Photo">
-
+<!-- NAME -->
 <div class="name">
-
-{{ candidate.first_name }}
-{{ candidate.last_name }}
-
+{{ candidate[1] }} {{ candidate[3] }}
 </div>
 
+<!-- SLOGAN -->
 <div class="slogan">
-
-{{ candidate.slogan }}
-
+{{ candidate[13] }}
 </div>
 
+<!-- EMOJI -->
 <div class="emoji">
-
-{{ candidate.emoji_symbol }}
-
+{{ candidate[12] }}
 </div>
 
 </div>
@@ -169,30 +114,24 @@ alt="Candidate Photo">
 
 </div>
 
-
 <script>
 
 /* ============================
-GET VOTER ID FROM STORAGE
+GET VOTER ID
 ============================ */
 
 function getVoterId() {
 
-let voterId =
-localStorage.getItem("voter_id");
+let voterId = localStorage.getItem("voter_id");
 
 if(!voterId) {
-
 alert("⚠️ Voter ID not found. Please register again.");
-
 window.location.href = "/citizen/register";
-
+return null;
 }
 
 return voterId;
-
 }
-
 
 /* ============================
 CAST VOTE
@@ -202,6 +141,8 @@ function castVote(candidateId) {
 
 let voterId = getVoterId();
 
+if(!voterId) return;
+
 if(confirm("Confirm your vote?")) {
 
 fetch("/vote", {
@@ -209,32 +150,30 @@ fetch("/vote", {
 method: "POST",
 
 headers: {
-
 "Content-Type": "application/json"
-
 },
 
 body: JSON.stringify({
-
 candidate_id: candidateId,
 voter_id: voterId
-
 })
 
 })
 
-.then(response => response.json())
-
+.then(res => res.json())
 .then(data => {
 
 alert(data.message);
 
 if(data.message.includes("Successfully")) {
-
 window.location.href = "/thankyou";
-
 }
 
+})
+
+.catch(err => {
+alert("Error while voting!");
+console.log(err);
 });
 
 }
@@ -244,5 +183,4 @@ window.location.href = "/thankyou";
 </script>
 
 </body>
-
 </html>
