@@ -3,7 +3,12 @@
 A secure, transparent, and tamper-proof online voting system built using **Flask (Python)** and **Blockchain technology**.  
 This project ensures **one person – one vote**, with OTP verification, QR-based voting access, and immutable vote storage.
 
----
+🚀 Live Demo
+
+👉 Access the live voting system here:
+
+🔗 https://decentralized-voting-system-oyu4.onrender.com
+
 
 # 📌 Project Overview
 
