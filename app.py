@@ -289,7 +289,7 @@ def generate_qr():
 
     token = str(uuid.uuid4())
 
-    BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:5000")
+    BASE_URL = os.getenv("BASE_URL", "https://decentralized-voting-system-zzla.onrender.com")
     voting_link = f"{BASE_URL}/citizen/{token}"
 
     qr = qrcode.make(voting_link)
