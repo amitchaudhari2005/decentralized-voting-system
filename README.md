@@ -261,6 +261,3 @@ GitHub: https://github.com/amitchaudhari2005
 This project is created for educational purposes only.
 Free to use and modify.
 
-⭐ If you like this project
-Give a ⭐ on GitHub to support development!
----# 🚀 If you want next upgradeI can also help you:- Make **GitHub profile README (super professional)**- Add **badges + live demo section**- Deploy this project online (Render / Railway)- Convert this into **final year project report (PDF)**Just tell 👍
