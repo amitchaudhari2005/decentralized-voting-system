@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
 <title>Citizen Voting Entry</title>
 
@@ -12,88 +11,60 @@ href="{{ url_for('static', filename='css/glass.css') }}">
 <style>
 
 body {
-
-margin:0;
-padding:0;
-
-background: linear-gradient(
-135deg,
-#1e3c72,
-#2a5298
-);
-
-font-family: Arial, sans-serif;
-
+    margin:0;
+    padding:0;
+    background: linear-gradient(135deg,#1e3c72,#2a5298);
+    font-family: Arial, sans-serif;
 }
 
 .start-container {
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-height:100vh;
-
-color:white;
-
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    color:white;
 }
 
 .start-box {
-
-background: rgba(255,255,255,0.15);
-
-backdrop-filter: blur(10px);
-
-padding:40px;
-
-border-radius:20px;
-
-text-align:center;
-
-box-shadow:0 8px 32px rgba(0,0,0,0.3);
-
-width:400px;
-
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 8px 32px rgba(0,0,0,0.3);
+    width:400px;
 }
 
 h1 {
-
-margin-bottom:15px;
-
+    margin-bottom:15px;
 }
 
 p {
-
-font-size:16px;
-margin-bottom:25px;
-
+    font-size:16px;
+    margin-bottom:25px;
 }
 
 button {
-
-padding:14px 25px;
-
-border:none;
-
-border-radius:10px;
-
-background:orange;
-
-color:white;
-
-font-size:18px;
-
-cursor:pointer;
-
-transition:0.3s;
-
+    padding:14px 25px;
+    border:none;
+    border-radius:10px;
+    background:orange;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    transition:0.3s;
 }
 
 button:hover {
+    background:#ff9500;
+    transform:scale(1.05);
+}
 
-background:#ff9500;
-transform:scale(1.05);
-
+.token-box {
+    font-size:12px;
+    margin-bottom:10px;
+    opacity:0.7;
+    word-break: break-all;
 }
 
 </style>
@@ -109,14 +80,16 @@ transform:scale(1.05);
 <h1>🗳️ Welcome Citizen</h1>
 
 <p>
-
-Click below to start your registration  
+Click below to start your registration<br>
 and cast your vote.
-
 </p>
 
-<!-- ✅ Correct Form with Token -->
+<!-- 🔥 DEBUG TOKEN (helpful for Render testing) -->
+<div class="token-box">
+Token: {{ token }}
+</div>
 
+<!-- ✅ FIXED FORM -->
 <form method="GET"
 action="{{ url_for('citizen_register') }}">
 
@@ -125,9 +98,7 @@ name="token"
 value="{{ token }}">
 
 <button type="submit">
-
 Start Registration →
-
 </button>
 
 </form>
