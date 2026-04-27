@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Cast Your Vote</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/glass.css') }}">
+
+<style>
+
+body {
+
+font-family: Arial, sans-serif;
+color: white;
+
+}
+
+/* Title */
+
+h1 {
+
+text-align: center;
+margin-top: 20px;
+
+}
+
+/* Container */
+
+.voting-container {
+
+display: flex;
+
+flex-wrap: wrap;
+
+justify-content: center;
+
+gap: 25px;
+
+padding: 40px;
+
+}
+
+/* Card */
+
+.candidate-card {
+
+width: 260px;
+
+background: rgba(255,255,255,0.15);
+
+backdrop-filter: blur(10px);
+
+border-radius: 20px;
+
+padding: 20px;
+
+text-align: center;
+
+box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+
+transition: 0.3s;
+
+}
+
+.candidate-card:hover {
+
+transform: scale(1.05);
+
+cursor: pointer;
+
+}
+
+/* Photo */
+
+.candidate-photo {
+
+width: 120px;
+height: 120px;
+
+border-radius: 50%;
+
+object-fit: cover;
+
+margin-bottom: 10px;
+
+}
+
+/* Emoji */
+
+.emoji {
+
+font-size: 45px;
+
+margin-top: 10px;
+
+}
+
+/* Name */
+
+.name {
+
+font-size: 18px;
+
+font-weight: bold;
+
+}
+
+/* Slogan */
+
+.slogan {
+
+font-size: 14px;
+
+opacity: 0.8;
+
+margin-top: 5px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🗳️ Cast Your Vote</h1>
+
+<div class="voting-container">
+
+{% for candidate in candidates %}
+
+<div class="candidate-card"
+
+onclick="castVote({{ candidate.candidate_id }})">
+
+<img class="candidate-photo"
+
+src="{{ url_for('static',
+filename='uploads/candidate_photos/' +
+candidate.photo) }}"
+
+alt="Candidate Photo">
+
+<div class="name">
+
+{{ candidate.first_name }}
+{{ candidate.last_name }}
+
+</div>
+
+<div class="slogan">
+
+{{ candidate.slogan }}
+
+</div>
+
+<div class="emoji">
+
+{{ candidate.emoji_symbol }}
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+<script>
+
+/* ============================
+GET VOTER ID FROM STORAGE
+============================ */
+
+function getVoterId() {
+
+let voterId =
+localStorage.getItem("voter_id");
+
+if(!voterId) {
+
+alert("⚠️ Voter ID not found. Please register again.");
+
+window.location.href = "/citizen/register";
+
+}
+
+return voterId;
+
+}
+
+
+/* ============================
+CAST VOTE
+============================ */
+
+function castVote(candidateId) {
+
+let voterId = getVoterId();
+
+if(confirm("Confirm your vote?")) {
+
+fetch("/vote", {
+
+method: "POST",
+
+headers: {
+
+"Content-Type": "application/json"
+
+},
+
+body: JSON.stringify({
+
+candidate_id: candidateId,
+voter_id: voterId
+
+})
+
+})
+
+.then(response => response.json())
+
+.then(data => {
+
+alert(data.message);
+
+if(data.message.includes("Successfully")) {
+
+window.location.href = "/thankyou";
+
+}
+
+});
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>

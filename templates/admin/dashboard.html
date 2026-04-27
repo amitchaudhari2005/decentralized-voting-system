@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<title>Admin Dashboard</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/glass.css') }}">
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#6a11cb,#2575fc);
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 30px;
+}
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+
+    gap: 20px;
+
+}
+
+.card {
+
+    background: rgba(255,255,255,0.1);
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+
+}
+
+.card:hover {
+
+    background: rgba(255,255,255,0.25);
+
+    transform: scale(1.05);
+
+}
+
+.logout-btn {
+
+    margin-top: 30px;
+
+    display: inline-block;
+
+    padding: 12px 25px;
+
+    background: red;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🗳️ Admin Dashboard</h1>
+
+<div class="dashboard-grid">
+
+<!-- Candidate Count -->
+
+<a href="{{ url_for('candidate_count') }}"
+   class="card">
+
+👥 Add Candidates
+
+</a>
+
+<!-- View Results -->
+
+<a href="{{ url_for('results') }}"
+   class="card">
+
+📊 View Results
+
+</a>
+
+<!-- Generate QR -->
+
+<a href="{{ url_for('generate_qr') }}"
+   class="card">
+
+📱 Generate QR
+
+</a>
+
+<!-- NEW Blockchain Button -->
+
+<a href="{{ url_for('view_blockchain') }}"
+   class="card">
+
+🔗 View Blockchain
+
+</a>
+
+</div>
+
+<!-- Logout -->
+
+<a href="{{ url_for('admin_logout') }}"
+   class="logout-btn">
+
+🚪 Logout
+
+</a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Candidate Registration</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/glass.css') }}">
+
+</head>
+
+<body>
+
+    <div class="background">
+
+        <div class="glass-card">
+
+            <h1>Candidate Registration</h1>
+
+            <form method="POST" action="/candidate/forms">
+
+                <label>Number of Candidates</label>
+
+                <select name="candidate_count" required>
+
+                    <option value="">Select Number</option>
+
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+
+                </select>
+
+                <br><br>
+
+                <button type="submit">
+
+                    Proceed →
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

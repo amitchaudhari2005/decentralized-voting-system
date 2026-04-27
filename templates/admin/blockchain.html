@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Blockchain Viewer</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .status {
+            padding: 10px;
+            margin-bottom: 20px;
+            background: #fff;
+            border-left: 5px solid green;
+        }
+
+        .block {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
+
+        .hash {
+            word-wrap: break-word;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .valid {
+            color: green;
+            font-weight: bold;
+        }
+
+        .invalid {
+            color: red;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            margin-bottom: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="back-btn">
+        <a href="/admin">⬅ Back to Dashboard</a>
+    </div>
+
+    <h2>🔗 Blockchain Status</h2>
+
+    <div class="status">
+
+        Chain Valid:
+
+        {% if valid %}
+        <span class="valid">✅ TRUE</span>
+        {% else %}
+        <span class="invalid">❌ FALSE</span>
+        {% endif %}
+
+    </div>
+
+    {% if chain %}
+
+        {% for block in chain %}
+
+        <div class="block">
+
+            <p><b>Index:</b> {{ block.index }}</p>
+
+            <p><b>Data:</b></p>
+
+            <pre>{{ block.data }}</pre>
+
+            <p class="hash">
+                <b>Hash:</b> {{ block.hash }}
+            </p>
+
+            <p class="hash">
+                <b>Previous Hash:</b> {{ block.previous_hash }}
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No blockchain data available.</p>
+
+    {% endif %}
+
+</body>
+
+</html>

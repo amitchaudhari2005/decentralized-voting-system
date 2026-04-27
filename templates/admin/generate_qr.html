@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Generate Voting QR</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/glass.css') }}">
+
+<style>
+
+.qr-container {
+
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+
+height:100vh;
+
+color:white;
+
+}
+
+.qr-box {
+
+background: rgba(255,255,255,0.15);
+
+backdrop-filter: blur(10px);
+
+padding:30px;
+
+border-radius:20px;
+
+text-align:center;
+
+box-shadow:0 8px 32px rgba(0,0,0,0.3);
+
+}
+
+.qr-box img {
+
+margin-top:20px;
+
+width:200px;
+
+}
+
+a {
+
+color:white;
+
+text-decoration:none;
+
+}
+
+button {
+
+padding:12px 20px;
+
+margin-top:20px;
+
+border:none;
+
+border-radius:10px;
+
+background:orange;
+
+color:white;
+
+font-size:16px;
+
+cursor:pointer;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="qr-container">
+
+<div class="qr-box">
+
+<h1>Voting QR Generated</h1>
+
+<p>Share this link with citizens:</p>
+
+<h3>{{ voting_link }}</h3>
+
+<!-- ✅ FIXED QR DISPLAY -->
+
+<img src="{{ url_for('static', filename='qr_codes/' + qr_filename) }}" 
+     alt="QR Code">
+
+<br>
+
+<!-- ✅ FIXED DOWNLOAD -->
+
+<a href="{{ url_for('static', filename='qr_codes/' + qr_filename) }}" download>
+
+<button>
+Download QR Code
+</button>
+
+</a>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

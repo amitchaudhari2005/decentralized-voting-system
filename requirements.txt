@@ -1,0 +1,11 @@
+Flask
+Flask-Mail
+Flask-SocketIO
+qrcode
+pillow
+email-validator
+eventlet
+reportlab
+Flask-Mail
+python-dotenv
+reportlab

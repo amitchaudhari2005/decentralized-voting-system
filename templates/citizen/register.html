@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Citizen Registration</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/glass.css') }}">
+
+<style>
+
+body {
+font-family: Arial, sans-serif;
+color: white;
+}
+
+.container {
+display:flex;
+justify-content:center;
+align-items:center;
+padding:40px;
+}
+
+.form-box {
+width:650px;
+background: rgba(255,255,255,0.15);
+backdrop-filter: blur(10px);
+padding:30px;
+border-radius:20px;
+box-shadow:0 8px 32px rgba(0,0,0,0.3);
+}
+
+h1 {
+text-align:center;
+margin-bottom:20px;
+}
+
+input,
+textarea {
+width:100%;
+padding:10px;
+margin-bottom:12px;
+border:none;
+border-radius:8px;
+}
+
+button {
+padding:12px;
+border:none;
+border-radius:10px;
+background:orange;
+color:white;
+font-size:16px;
+cursor:pointer;
+margin-bottom:10px;
+}
+
+button:hover {
+background:darkorange;
+}
+
+.otp-row {
+display:flex;
+gap:10px;
+}
+
+.token-box {
+background: rgba(0,0,0,0.3);
+padding:10px;
+border-radius:10px;
+margin-bottom:15px;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="form-box">
+
+<h1>🧾 Citizen Registration</h1>
+
+<!-- TOKEN DISPLAY -->
+
+<div class="token-box">
+
+Token:
+<b id="tokenDisplay">{{ token }}</b>
+
+</div>
+
+<form method="POST"
+action="{{ url_for('save_citizen') }}"
+enctype="multipart/form-data">
+
+<!-- ✅ TOKEN (Flask Direct) -->
+
+<input type="hidden"
+name="token"
+id="tokenInput"
+value="{{ token }}">
+
+
+<!-- NAME -->
+
+<input type="text"
+name="first_name"
+placeholder="First Name *"
+required>
+
+<input type="text"
+name="middle_name"
+placeholder="Middle Name">
+
+<input type="text"
+name="last_name"
+placeholder="Last Name *"
+required>
+
+
+<!-- PARENTS -->
+
+<input type="text"
+name="father_name"
+placeholder="Father's Name *"
+required>
+
+<input type="text"
+name="mother_name"
+placeholder="Mother's Name *"
+required>
+
+
+<!-- MOBILE -->
+
+<input type="tel"
+name="mobile"
+placeholder="Mobile Number (10 digits)"
+maxlength="10"
+pattern="[0-9]{10}"
+required>
+
+
+<!-- EMAIL + OTP -->
+
+<input type="email"
+name="email"
+id="email"
+placeholder="Email ID *"
+required>
+
+<button type="button"
+onclick="sendOTP()">
+
+📧 Send OTP
+
+</button>
+
+<div class="otp-row">
+
+<input type="text"
+id="otp"
+placeholder="Enter OTP">
+
+<button type="button"
+onclick="verifyOTP()">
+
+✔ Verify OTP
+
+</button>
+
+</div>
+
+
+<!-- VOTER ID -->
+
+<input type="text"
+name="voter_id"
+id="voter_id"
+placeholder="Voter ID *"
+required>
+
+
+<!-- ADDRESS -->
+
+<textarea
+name="address"
+placeholder="Address"
+required></textarea>
+
+
+<!-- PINCODE -->
+
+<input type="text"
+name="pincode"
+placeholder="Pin Code (6 digits)"
+maxlength="6"
+pattern="[0-9]{6}"
+required>
+
+
+<!-- PHOTO -->
+
+<label>Upload Photo:</label>
+
+<input type="file"
+name="photo"
+accept="image/*"
+required>
+
+
+<!-- SIGNATURE -->
+
+<label>Upload Signature:</label>
+
+<input type="file"
+name="signature"
+accept="image/*"
+required>
+
+
+<!-- SUBMIT -->
+
+<button type="submit">
+
+Submit Registration
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ============================
+OTP STATUS FLAG
+============================ */
+
+let otpVerified = false;
+
+
+/* ============================
+SEND OTP
+============================ */
+
+function sendOTP() {
+
+let email =
+document.getElementById("email").value;
+
+if(email === "") {
+
+alert("Enter email first!");
+return;
+
+}
+
+fetch("/send-otp", {
+
+method: "POST",
+
+headers: {
+"Content-Type":
+"application/x-www-form-urlencoded"
+},
+
+body: `email=${encodeURIComponent(email)}`
+
+})
+
+.then(response => response.json())
+
+.then(data => {
+
+alert(data.message);
+
+});
+
+}
+
+
+/* ============================
+VERIFY OTP
+============================ */
+
+function verifyOTP() {
+
+let otp =
+document.getElementById("otp").value;
+
+fetch("/verify-otp", {
+
+method: "POST",
+
+headers: {
+"Content-Type":
+"application/x-www-form-urlencoded"
+},
+
+body: `otp=${otp}`
+
+})
+
+.then(response => response.json())
+
+.then(data => {
+
+alert(data.message);
+
+if(data.message === "OTP Verified") {
+
+otpVerified = true;
+
+}
+
+});
+
+}
+
+
+/* ============================
+PREVENT SUBMIT WITHOUT OTP
+============================ */
+
+document.querySelector("form")
+.addEventListener("submit", function(e){
+
+if(!otpVerified) {
+
+alert("⚠️ Please verify OTP first!");
+
+e.preventDefault();
+
+return;
+
+}
+
+let voterId =
+document.getElementById("voter_id").value;
+
+localStorage.setItem(
+"voter_id",
+voterId
+);
+
+});
+
+</script>
+
+</body>
+
+</html>
