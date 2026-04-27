@@ -2,8 +2,9 @@ Flask
 Flask-Mail
 Flask-SocketIO
 qrcode
-pillow
+Pillow
 email-validator
 eventlet
 reportlab
 python-dotenv
+gunicorn
