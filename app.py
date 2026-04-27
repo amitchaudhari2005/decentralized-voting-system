@@ -316,11 +316,16 @@ def generate_qr():
 @app.route("/citizen/<token>")
 def citizen_entry(token):
 
-    return render_template(
-        "citizen/start.html",
-        token=token
-    )
+    if not token:
+        return "Invalid QR Token"
 
+    try:
+        return render_template(
+            "citizen/start.html",
+            token=token
+        )
+    except Exception as e:
+        return f"Page Error: {str(e)}"
 
 # ============================
 # CITIZEN REGISTER PAGE
