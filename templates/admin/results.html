@@ -6,7 +6,6 @@
 <meta charset="UTF-8">
 <title>Election Results</title>
 
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <link rel="stylesheet"
@@ -15,106 +14,66 @@ href="{{ url_for('static', filename='css/glass.css') }}">
 <style>
 
 body {
-
 font-family: Arial, sans-serif;
 color:white;
-
+margin:0;
+padding:0;
 }
-
-/* Container */
 
 .container {
-
 padding:30px;
-
 }
-
-/* Glass Box */
 
 .glass {
-
 background: rgba(255,255,255,0.15);
-
 backdrop-filter: blur(10px);
-
 border-radius:20px;
-
 padding:20px;
-
 margin-bottom:20px;
-
 box-shadow:0 8px 32px rgba(0,0,0,0.3);
-
 }
-
-/* Table */
 
 table {
-
 width:100%;
 border-collapse: collapse;
-
 }
 
-th,
-td {
-
+th, td {
 padding:12px;
 text-align:center;
-
 }
 
 th {
-
 background: rgba(255,255,255,0.3);
-
 }
-
-/* Winner Highlight */
 
 .winner {
-
 background: rgba(0,255,0,0.3);
-
 font-weight:bold;
-
 }
 
-/* Buttons */
-
 button {
-
 padding:12px 18px;
-
 border:none;
-
 border-radius:10px;
-
 background:orange;
-
 color:white;
-
 font-size:16px;
-
 cursor:pointer;
-
 }
 
 button:hover {
-
 background:darkorange;
-
 }
 
-/* Charts */
-
 .chart-container {
-
 width:100%;
 max-width:700px;
-
 margin:auto;
+}
 
+h1,h2 {
+text-align:center;
 }
 
 </style>
@@ -125,29 +84,15 @@ margin:auto;
 
 <div class="container">
 
-<h1 style="text-align:center;">
-📊 Election Results Dashboard
-</h1>
+<h1>📊 Election Results Dashboard</h1>
 
-<!-- PDF BUTTON -->
-
-<div class="glass"
-style="text-align:center;">
-
+<div class="glass" style="text-align:center;">
 <a href="/admin/export-pdf">
-
-<button>
-
-📄 Download Results PDF
-
-</button>
-
+<button>📄 Download Results PDF</button>
 </a>
-
 </div>
 
-<!-- RESULTS TABLE -->
-
+<!-- TABLE -->
 <div class="glass">
 
 <h2>Vote Results</h2>
@@ -155,73 +100,53 @@ style="text-align:center;">
 <table>
 
 <tr>
-
 <th>Rank</th>
 <th>Candidate Name</th>
 <th>Emoji</th>
 <th>Total Votes</th>
-
 </tr>
 
-{% set winner_votes = results[0]['total_votes'] if results else 0 %}
+{% if results|length > 0 %}
+
+{% set winner_votes = results[0][3] %}
 
 {% for row in results %}
 
-<tr class="
-{% if row['total_votes'] == winner_votes %}
-winner
-{% endif %}
-">
+<tr class="{% if row[3] == winner_votes %}winner{% endif %}">
 
-<td>
+<td>{{ loop.index }}</td>
 
-{{ loop.index }}
+<td>{{ row[0] }} {{ row[1] }}</td>
 
-</td>
+<td>{{ row[2] }}</td>
 
-<td>
-
-{{ row['first_name'] }}
-{{ row['last_name'] }}
-
-</td>
-
-<td>
-
-{{ row['emoji_symbol'] }}
-
-</td>
-
-<td>
-
-{{ row['total_votes'] }}
-
-</td>
+<td>{{ row[3] }}</td>
 
 </tr>
 
 {% endfor %}
 
+{% else %}
+
+<tr>
+<td colspan="4">No votes yet</td>
+</tr>
+
+{% endif %}
+
 </table>
 
 </div>
 
-<!-- WINNER MESSAGE -->
+<!-- WINNER -->
+{% if results|length > 0 %}
 
-{% if results %}
-
-<div class="glass"
-style="text-align:center;">
+<div class="glass">
 
 <h2>
-
-🏆 Congratulations Winner:
-
-{{ results[0]['first_name'] }}
-{{ results[0]['last_name'] }}
-
+🏆 Winner:
+{{ results[0][0] }} {{ results[0][1] }}
 🎉
-
 </h2>
 
 </div>
@@ -229,149 +154,83 @@ style="text-align:center;">
 {% endif %}
 
 <!-- BAR CHART -->
-
 <div class="glass">
 
-<h2 style="text-align:center;">
-📊 Bar Chart Results
-</h2>
+<h2>📊 Bar Chart</h2>
 
 <div class="chart-container">
-
 <canvas id="barChart"></canvas>
-
 </div>
 
 </div>
 
 <!-- PIE CHART -->
-
 <div class="glass">
 
-<h2 style="text-align:center;">
-🥧 Pie Chart Results
-</h2>
+<h2>🥧 Pie Chart</h2>
 
 <div class="chart-container">
-
 <canvas id="pieChart"></canvas>
-
 </div>
 
 </div>
 
 </div>
-
-<!-- CHART SCRIPT -->
 
 <script>
 
 /* ============================
-Prepare Data
+SAFE DATA
 ============================ */
 
 let candidateNames = [
-
 {% for row in results %}
-
-"{{ row['first_name'] }} {{ row['last_name'] }}",
-
+"{{ row[0] }} {{ row[1] }}",
 {% endfor %}
-
 ];
 
 let voteCounts = [
-
 {% for row in results %}
-
-{{ row['total_votes'] }},
-
+{{ row[3] }},
 {% endfor %}
-
 ];
 
-
 /* ============================
-Bar Chart
+BAR CHART
 ============================ */
 
-new Chart(
-
-document.getElementById("barChart"),
-
-{
-
+new Chart(document.getElementById("barChart"), {
 type: "bar",
-
 data: {
-
 labels: candidateNames,
-
-datasets: [
-
-{
-
+datasets: [{
 label: "Votes",
-
 data: voteCounts
-
-}
-
-]
-
+}]
 },
-
 options: {
-
-responsive:true
-
+responsive: true
 }
-
-}
-
-);
-
+});
 
 /* ============================
-Pie Chart
+PIE CHART
 ============================ */
 
-new Chart(
-
-document.getElementById("pieChart"),
-
-{
-
+new Chart(document.getElementById("pieChart"), {
 type: "pie",
-
 data: {
-
 labels: candidateNames,
-
-datasets: [
-
-{
-
+datasets: [{
 data: voteCounts
-
-}
-
-]
-
+}]
 },
-
 options: {
-
-responsive:true
-
+responsive: true
 }
-
-}
-
-);
+});
 
 </script>
 
 </body>
-
 </html>
